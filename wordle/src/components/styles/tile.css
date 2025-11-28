@@ -1,0 +1,29 @@
+.tile {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #ccc;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #000;
+}
+
+/* Estados */
+.tile.correct {
+  background: #6aaa64;
+  color: white;
+}
+
+.tile.present {
+  background: #c9b458;
+  color: white;
+}
+
+.tile.absent {
+  background: #787c7e;
+  color: white;
+}
