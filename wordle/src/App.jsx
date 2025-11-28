@@ -3,22 +3,30 @@ import Keyboard from "./components/Keyboard.jsx";
 import Board from "./components/Board.jsx";
 
 export default function App() {
-  const [pressed, setPressed] = useState("");
   const [attempts, setAttempts] = useState([]);
   const [currentGuess, setCurrentGuess] = useState("");
   const maxLength = 5;
 
-  const handleKeyPress = (letter) => {
-    if (currentGuess.length >= maxLength) return;
+  const handleKeyPress = (key) => {
+    if (key === "ENTER") {
+      console.log("Enviar palabra:", currentGuess);
+      return;
+    }
 
-    setCurrentGuess((prev) => prev + letter.toLowerCase());
-    setPressed(letter);
+    if (key === "DELETE") {
+      setCurrentGuess((prev) => prev.slice(0, -1));
+      return;
+    }
+
+    // Letras normales
+    if (currentGuess.length < maxLength) {
+      setCurrentGuess((prev) => prev + key.toLowerCase());
+    }
   };
 
   return (
     <div className="container">
       <h1>Wordle papaaaa</h1>
-      <p>Última tecla: {pressed}</p>
       <Board attempts={[...attempts, { word: currentGuess, statuses: [] }]} />
 
       <Keyboard onKeyPress={handleKeyPress} keyStatuses={{}} />
