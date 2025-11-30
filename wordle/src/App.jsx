@@ -6,6 +6,7 @@ export default function App() {
   const [attempts, setAttempts] = useState([]);
   const [currentGuess, setCurrentGuess] = useState("");
   const maxLength = 5;
+  const wordLength = 6;
 
   const handleKeyPress = (key) => {
     if (key === "ENTER") {
@@ -27,7 +28,10 @@ export default function App() {
   return (
     <div className="container">
       <h1>Wordle papaaaa</h1>
-      <Board attempts={[...attempts, { word: currentGuess, statuses: [] }]} />
+      <Board
+        attempts={[...attempts, { word: currentGuess, statuses: [] }]}
+        wordLength={wordLength}
+      />
 
       <Keyboard onKeyPress={handleKeyPress} keyStatuses={{}} />
     </div>

@@ -1,8 +1,8 @@
 import Tile from "./Tile";
 import "./styles/row.css";
 
-export default function Row({ letters = "", statuses = [] }) {
-  const cells = letters.padEnd(5).split("");
+export default function Row({ letters = "", statuses = [], wordLength }) {
+  const cells = letters.padEnd(wordLength).split("");
 
   return (
     <div className="row">
