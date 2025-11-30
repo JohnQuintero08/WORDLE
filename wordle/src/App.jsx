@@ -63,7 +63,7 @@ export default function App() {
         wordLength={wordLength}
       />
 
-      <Keyboard onKeyPress={handleKeyPress} keyStatuses={{}} />
+      <Keyboard onKeyPress={handleKeyPress} keyStatuses={keyStatuses} />
     </div>
   );
 }
