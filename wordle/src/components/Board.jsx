@@ -1,9 +1,7 @@
 import Row from "./Row";
 import "./styles/board.css";
 
-export default function Board({ attempts, wordLength }) {
-  const maxRows = 6;
-
+export default function Board({ maxRows, attempts, wordLength }) {
   return (
     <div className="board">
       {Array.from({ length: maxRows }).map((_, i) => (
