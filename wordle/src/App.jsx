@@ -8,12 +8,17 @@ export default function App() {
   const [attempts, setAttempts] = useState([]);
   const [currentGuess, setCurrentGuess] = useState("");
   const [keyStatuses, setKeyStatuses] = useState({});
+  const [isWin, setIsWin] = useState(false);
+  const [isLose, setIsLose] = useState(false);
+
   const wordLength = 5;
   const maxRows = 6;
 
   const SOLUTION = "APPLE";
 
   const handleKeyPress = (key) => {
+    if (isWin || isLose) return;
+
     if (key === "ENTER") {
       console.log("Enviar palabra:", currentGuess);
       handleSubmit();
@@ -35,28 +40,41 @@ export default function App() {
     // No enviar si no hay 5 letras
     if (currentGuess.length !== wordLength) return;
 
-    // 1. Generar colores
+    // Generar colores
     const statuses = getStatuses(
       currentGuess,
       SOLUTION.toLowerCase(),
       wordLength
     );
 
-    // 2. Guardar intento → BLOQUEA LA FILA
-    setAttempts((prev) => [...prev, { word: currentGuess, statuses }]);
+    if (currentGuess.toLowerCase() === SOLUTION.toLowerCase()) {
+      setIsWin(true);
+    }
 
-    // 3. Actualizar colores del teclado
+    // Guardar intento → BLOQUEA LA FILA
+    setAttempts((prev) => {
+      const newAttempts = [...prev, { word: currentGuess, statuses }];
+
+      // VERIFICAR DERROTA SOLO SI NO GANÓ
+      if (!isWin && newAttempts.length === 6) {
+        setIsLose(true);
+      }
+
+      return newAttempts;
+    });
+    // Actualizar colores del teclado
     setKeyStatuses((prev) =>
       updateKeyboardStatuses(prev, currentGuess, statuses)
     );
 
-    // 4. Pasar a la siguiente fila limpiando currentGuess
+    // Pasar a la siguiente fila limpiando currentGuess
     setCurrentGuess("");
   };
 
   return (
     <div className="container">
-      <h1>Wordle papaaaa</h1>
+      {isWin && <h1>"Ganaste"</h1>}
+      {isLose && <h2>😢 Perdiste. La palabra era: {SOLUTION}</h2>}
       <Board
         maxRows={maxRows}
         attempts={[...attempts, { word: currentGuess, statuses: [] }]}
