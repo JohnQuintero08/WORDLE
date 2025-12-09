@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Keyboard from "./components/Keyboard.jsx";
 import Board from "./components/Board.jsx";
 import { getStatuses } from "./utils/getStatuses";
 import { updateKeyboardStatuses } from "./utils/updateKeyboardStatuses";
+import { loadTodayWord } from "./utils/getWordFromSupabase";
 
 export default function App() {
   const [attempts, setAttempts] = useState([]);
@@ -10,11 +11,23 @@ export default function App() {
   const [keyStatuses, setKeyStatuses] = useState({});
   const [isWin, setIsWin] = useState(false);
   const [isLose, setIsLose] = useState(false);
+  const [solution, setSolution] = useState("");
 
   const wordLength = 5;
   const maxRows = 6;
 
-  const SOLUTION = "APPLE";
+  // const solution = "APPLE";
+
+  useEffect(() => {
+    async function fetchWord() {
+      const data = await loadTodayWord();
+      if (data) {
+        setSolution(data);
+      }
+    }
+
+    fetchWord();
+  }, []);
 
   const handleKeyPress = (key) => {
     if (isWin || isLose) return;
@@ -37,17 +50,17 @@ export default function App() {
   };
 
   const handleSubmit = () => {
-    // No enviar si no hay 5 letras
-    if (currentGuess.length !== wordLength) return;
+    // No enviar si no hay 5 letras o si no hay solución cargada
+    if (currentGuess.length !== wordLength || !solution) return;
 
     // Generar colores
     const statuses = getStatuses(
       currentGuess,
-      SOLUTION.toLowerCase(),
+      solution.toLowerCase(),
       wordLength
     );
 
-    if (currentGuess.toLowerCase() === SOLUTION.toLowerCase()) {
+    if (currentGuess.toLowerCase() === solution.toLowerCase()) {
       setIsWin(true);
     }
 
@@ -73,8 +86,9 @@ export default function App() {
 
   return (
     <div className="container">
+      {solution && <h1>{solution}</h1>}
       {isWin && <h1>"Ganaste"</h1>}
-      {isLose && <h2>😢 Perdiste. La palabra era: {SOLUTION}</h2>}
+      {isLose && <h2>😢 Perdiste. La palabra era: {solution}</h2>}
       <Board
         maxRows={maxRows}
         attempts={[...attempts, { word: currentGuess, statuses: [] }]}
